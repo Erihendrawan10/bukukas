@@ -35,8 +35,12 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:'Inter',sans-ser
 .tank-count{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:20px;margin-top:10px;}
 .tank-caption{font-size:12px;color:var(--muted);margin-top:2px;}
 
-.summary-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px;}
-.stat-num{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:19px;margin-top:2px;}
+.summary-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;}
+.stat-box{background:#F8FBFA;border:1px solid var(--line);border-left:3px solid var(--teal);border-radius:10px;padding:12px 14px;min-width:0;}
+.stat-box.stat-biaya{border-left-color:#8FA6A3;}
+.stat-box.stat-laba{border-left-color:var(--green);}
+.stat-box.stat-pph{border-left-color:var(--rust);}
+.stat-num{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:16px;margin-top:4px;letter-spacing:-0.01em;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .stat-num.pos{color:var(--green);}
 .stat-num.tax{color:var(--rust);}
 
@@ -79,5 +83,3 @@ tr:last-child td{border-bottom:none;}
 
 .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:10px 18px;border-radius:8px;font-size:13px;opacity:0;transition:opacity .2s,transform .2s;pointer-events:none;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
-
-.config-warning{background:#FDECEA;border:1px solid #F3C0BA;color:#9A3B34;font-size:13px;padding:10px 14px;border-radius:10px;margin:-8px 0 16px;}

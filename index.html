@@ -21,10 +21,6 @@
     </div>
   </div>
 
-  <p id="configWarning" class="config-warning" style="display:none;">
-    ⚠️ URL backend belum diisi di <code>config.js</code>. Buka file itu dan tempel URL Web App dari Google Apps Script kamu.
-  </p>
-
   <div class="top-grid">
     <div class="card tank-card">
       <p class="card-label">Kelengkapan catatan</p>
@@ -42,10 +38,10 @@
     <div class="card" style="margin-bottom:0;">
       <h2>Ringkasan tahun berjalan</h2>
       <div class="summary-grid">
-        <div><p class="card-label">Total omset</p><p class="stat-num" id="sumOmzet">Rp 0</p></div>
-        <div><p class="card-label">Total biaya</p><p class="stat-num" id="sumBiaya">Rp 0</p></div>
-        <div><p class="card-label">Laba bersih</p><p class="stat-num pos" id="sumLaba">Rp 0</p></div>
-        <div><p class="card-label">PPh Final terutang</p><p class="stat-num tax" id="sumPph">Rp 0</p></div>
+        <div class="stat-box stat-omzet"><p class="card-label">Total omset</p><p class="stat-num" id="sumOmzet">Rp 0</p></div>
+        <div class="stat-box stat-biaya"><p class="card-label">Total biaya</p><p class="stat-num" id="sumBiaya">Rp 0</p></div>
+        <div class="stat-box stat-laba"><p class="card-label">Laba bersih</p><p class="stat-num pos" id="sumLaba">Rp 0</p></div>
+        <div class="stat-box stat-pph"><p class="card-label">PPh Final terutang</p><p class="stat-num tax" id="sumPph">Rp 0</p></div>
       </div>
     </div>
   </div>
@@ -80,7 +76,7 @@
       <div class="field full">
         <label for="fBukti">Bukti transfer / pembelian (opsional)</label>
         <input type="file" id="fBukti" accept="image/*,application/pdf" multiple>
-        <p class="field-hint">Tersimpan ke folder Google Drive "Buku Kas Toren - Bukti". Maks sekitar 5MB per file.</p>
+        <p class="field-hint">Maks sekitar 8MB per file.</p>
         <div id="buktiList"></div>
       </div>
     </div>
@@ -120,11 +116,11 @@
   </div>
 
   <div class="card">
-    <h2>Data tersimpan di Google Sheet</h2>
-    <p class="hint" style="margin:0 0 14px;">Semua catatan dan aset tersimpan langsung di spreadsheet Google Sheets yang menjalankan backend ini — bukan di browser. Untuk salinan Excel, buka spreadsheetnya lalu File &gt; Download &gt; Microsoft Excel.</p>
+    <h2>Data tersimpan di server</h2>
+    <p class="hint" style="margin:0 0 14px;">Semua catatan dan bukti tersimpan di server ini (folder <code>data/</code>), bukan di browser — jadi tetap ada walau kamu ganti perangkat, asalkan mengakses server yang sama.</p>
     <div class="form-actions" style="margin-top:0;">
       <span class="hint" id="dataStatus"></span>
-      <a class="btn-primary" id="openSheetBtn" href="#" target="_blank" rel="noopener" style="display:none;">Buka Spreadsheet</a>
+      <a class="btn-primary" id="exportBtn" href="/api/export.xlsx">Unduh sebagai Excel (.xlsx)</a>
     </div>
   </div>
 
@@ -167,7 +163,6 @@
 
 </div>
 <div class="toast" id="toast"></div>
-<script src="config.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
