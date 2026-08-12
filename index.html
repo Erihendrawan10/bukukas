@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Buku Kas Bulanan Kurasin Toren</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+:root{
+  --ink:#12313A;
+  --bg:#EEF3F1;
+  --card:#FFFFFF;
+  --teal:#1C7C88;
+  --teal-dark:#0F5A63;
+  --teal-light:#E1F0F0;
+  --rust:#B5652D;
+  --green:#2F7A50;
+  --line:#DCE6E3;
+  --muted:#5C7874;
+}
+*{box-sizing:border-box;}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Inter',sans-serif;}
+.wrap{max-width:960px;margin:0 auto;padding:28px 20px 60px;}
+
+.head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:22px;border-bottom:1px solid var(--line);padding-bottom:18px;}
+.head-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--teal-dark);margin:0 0 6px;}
+.biz-name{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:26px;line-height:1.2;border:none;background:transparent;color:var(--ink);width:100%;padding:0;outline:none;}
+.biz-name:focus{outline:2px solid var(--teal);outline-offset:3px;border-radius:4px;}
+.head-sub{font-size:13px;color:var(--muted);margin:6px 0 0;}
+.year-picker{display:flex;align-items:center;gap:8px;font-family:'IBM Plex Mono',monospace;font-size:14px;}
+.year-picker select{font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:600;padding:7px 10px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink);}
+
+.config-warning{background:#FDECEA;border:1px solid #F3C0BA;color:#9A3B34;font-size:13px;padding:10px 14px;border-radius:10px;margin:-8px 0 16px;}
+
+.top-grid{display:grid;grid-template-columns:220px 1fr;gap:16px;margin-bottom:16px;}
+@media(max-width:640px){.top-grid{grid-template-columns:1fr;}}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-bottom:16px;}
+.card h2{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;margin:0 0 14px;}
+.card-label{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:0 0 4px;}
+
+.tank-card{display:flex;flex-direction:column;align-items:center;text-align:center;}
+.tank-count{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:20px;margin-top:10px;}
+.tank-caption{font-size:12px;color:var(--muted);margin-top:2px;}
+
+.summary-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;}
+.stat-box{background:#F8FBFA;border:1px solid var(--line);border-left:3px solid var(--teal);border-radius:10px;padding:12px 14px;min-width:0;}
+.stat-box.stat-biaya{border-left-color:#8FA6A3;}
+.stat-box.stat-laba{border-left-color:var(--green);}
+.stat-box.stat-pph{border-left-color:var(--rust);}
+.stat-num{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:16px;margin-top:4px;letter-spacing:-0.01em;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.stat-num.pos{color:var(--green);}
+.stat-num.tax{color:var(--rust);}
+
+.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px 16px;}
+@media(max-width:640px){.form-grid{grid-template-columns:1fr;}}
+.field{display:flex;flex-direction:column;gap:5px;}
+.field label{font-size:12px;color:var(--muted);}
+.field input,.field select{font-family:'Inter',sans-serif;font-size:14px;padding:9px 10px;border-radius:8px;border:1px solid var(--line);background:#FBFDFC;color:var(--ink);}
+.field input:focus,.field select:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px var(--teal-light);}
+.field.full{grid-column:1/-1;}
+.money-input{position:relative;}
+.money-input span{position:absolute;left:10px;top:9px;font-size:13px;color:var(--muted);}
+.money-input input{padding-left:30px;font-family:'IBM Plex Mono',monospace;text-align:right;}
+.field-hint{font-size:11px;color:var(--muted);margin:2px 0 0;}
+
+.form-actions{display:flex;justify-content:space-between;align-items:center;margin-top:16px;flex-wrap:wrap;gap:10px;}
+.hint{font-size:12px;color:var(--muted);}
+button,.btn-primary,.btn-ghost{font-family:'Inter',sans-serif;font-weight:600;font-size:14px;border-radius:8px;border:1px solid transparent;padding:10px 18px;cursor:pointer;text-decoration:none;display:inline-block;}
+.btn-primary{background:var(--teal);color:#fff;}
+.btn-primary:hover{background:var(--teal-dark);}
+.btn-ghost{background:transparent;border:1px solid var(--line);color:var(--ink);}
+.btn-ghost:hover{background:var(--bg);}
+
+table{width:100%;border-collapse:collapse;font-size:13px;}
+th{text-align:right;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:600;padding:8px 8px;border-bottom:1px solid var(--line);}
+th:first-child,td:first-child{text-align:left;}
+td{padding:9px 8px;border-bottom:1px solid var(--line);font-family:'IBM Plex Mono',monospace;text-align:right;}
+tr:last-child td{border-bottom:none;}
+.row-actions{font-family:'Inter',sans-serif;text-align:right;white-space:nowrap;}
+.row-actions button{padding:4px 8px;font-size:12px;margin-left:4px;}
+.empty-row td{font-family:'Inter',sans-serif;color:var(--muted);text-align:center;padding:22px 8px;}
+.tfoot td{font-weight:600;border-top:2px solid var(--ink);border-bottom:none;}
+
+.bukti-badge{font-family:'Inter',sans-serif;background:none;border:1px solid var(--line);border-radius:6px;padding:4px 8px;font-size:12px;color:var(--teal-dark);cursor:pointer;}
+.bukti-row td{font-family:'Inter',sans-serif;text-align:left;background:#F7FAF9;}
+.bukti-row.hidden{display:none;}
+.bukti-chip{display:inline-flex;align-items:center;gap:6px;background:var(--teal-light);color:var(--teal-dark);border-radius:6px;padding:4px 8px;font-size:12px;margin:2px 6px 2px 0;}
+.bukti-chip a{color:var(--teal-dark);text-decoration:underline;}
+.bukti-chip button{background:none;border:none;padding:0;font-size:13px;font-weight:700;color:var(--rust);cursor:pointer;}
+
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:10px 18px;border-radius:8px;font-size:13px;opacity:0;transition:opacity .2s,transform .2s;pointer-events:none;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="head">
+    <div style="flex:1;min-width:240px;">
+      <p class="head-eyebrow">Pencatatan keuangan usaha</p>
+      <input id="bizName" class="biz-name" value="Buku Kas Bulanan Kurasin Toren" spellcheck="false">
+      <p class="head-sub">Catat omset dan biaya sekali sebulan — dipakai sebagai dasar isi SPT Tahunan di Coretax.</p>
+    </div>
+    <div class="year-picker">
+      <span style="color:var(--muted);">Tahun pajak</span>
+      <select id="yearSelect"></select>
+    </div>
+  </div>
+
+  <p id="configWarning" class="config-warning" style="display:none;">
+    ⚠️ URL backend belum diisi. Buka file ini dengan editor teks, cari <code>API_URL</code> di bagian atas tag &lt;script&gt;, lalu tempel URL Web App dari Google Apps Script kamu.
+  </p>
+
+  <div class="top-grid">
+    <div class="card tank-card">
+      <p class="card-label">Kelengkapan catatan</p>
+      <svg id="tankSvg" width="110" height="140" viewBox="0 0 110 140">
+        <rect x="30" y="6" width="50" height="14" rx="3" fill="none" stroke="#12313A" stroke-width="2"/>
+        <rect x="10" y="18" width="90" height="112" rx="10" fill="#F6FAF9" stroke="#12313A" stroke-width="2.5"/>
+        <clipPath id="tankClip"><rect x="12" y="20" width="86" height="108" rx="8"/></clipPath>
+        <rect id="tankWater" x="12" y="128" width="86" height="0" fill="#1C7C88" clip-path="url(#tankClip)"/>
+        <rect x="10" y="18" width="90" height="112" rx="10" fill="none" stroke="#12313A" stroke-width="2.5"/>
+      </svg>
+      <p class="tank-count" id="tankCount">0 / 12</p>
+      <p class="tank-caption">bulan tercatat tahun ini</p>
+    </div>
+
+    <div class="card" style="margin-bottom:0;">
+      <h2>Ringkasan tahun berjalan</h2>
+      <div class="summary-grid">
+        <div class="stat-box stat-omzet"><p class="card-label">Total omset</p><p class="stat-num" id="sumOmzet">Rp 0</p></div>
+        <div class="stat-box stat-biaya"><p class="card-label">Total biaya</p><p class="stat-num" id="sumBiaya">Rp 0</p></div>
+        <div class="stat-box stat-laba"><p class="card-label">Laba bersih</p><p class="stat-num pos" id="sumLaba">Rp 0</p></div>
+        <div class="stat-box stat-pph"><p class="card-label">PPh Final terutang</p><p class="stat-num tax" id="sumPph">Rp 0</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2 id="formTitle">Catat bulan ini</h2>
+    <div class="form-grid">
+      <div class="field">
+        <label for="fBulan">Bulan</label>
+        <select id="fBulan"></select>
+      </div>
+      <div class="field">
+        <label for="fOmzet">Omset jasa</label>
+        <div class="money-input"><span>Rp</span><input id="fOmzet" inputmode="numeric" placeholder="0"></div>
+      </div>
+      <div class="field">
+        <label for="fMarketing">Biaya marketing</label>
+        <div class="money-input"><span>Rp</span><input id="fMarketing" inputmode="numeric" placeholder="0"></div>
+      </div>
+      <div class="field">
+        <label for="fKomisi">Komisi teknisi</label>
+        <div class="money-input"><span>Rp</span><input id="fKomisi" inputmode="numeric" placeholder="0"></div>
+      </div>
+      <div class="field">
+        <label for="fLain">Biaya lain-lain</label>
+        <div class="money-input"><span>Rp</span><input id="fLain" inputmode="numeric" placeholder="0"></div>
+      </div>
+      <div class="field">
+        <label for="fCatatan">Catatan (opsional)</label>
+        <input id="fCatatan">
+      </div>
+      <div class="field full">
+        <label for="fBukti">Bukti transfer / pembelian (opsional)</label>
+        <input type="file" id="fBukti" accept="image/*,application/pdf" multiple>
+        <p class="field-hint">Tersimpan ke folder Google Drive "Buku Kas Toren - Bukti". Maks sekitar 5MB per file.</p>
+        <div id="buktiList"></div>
+      </div>
+    </div>
+    <div class="form-actions">
+      <span class="hint" id="formHint">Pilih bulan yang sudah tercatat untuk mengeditnya.</span>
+      <div>
+        <button class="btn-ghost" id="cancelEdit" style="display:none;">Batal edit</button>
+        <button class="btn-primary" id="saveBtn">Simpan bulan ini</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Catatan per bulan — <span id="tableYearLabel"></span></h2>
+    <div style="overflow-x:auto;">
+      <table>
+        <thead>
+          <tr><th>Bulan</th><th>Omset</th><th>Biaya</th><th>Laba bersih</th><th>PPh final</th><th>Bukti</th><th class="row-actions">Aksi</th></tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+        <tfoot>
+          <tr class="tfoot">
+            <td>Total</td>
+            <td id="fOmzetTot">Rp 0</td>
+            <td id="fBiayaTot">Rp 0</td>
+            <td id="fLabaTot">Rp 0</td>
+            <td id="fPphTot">Rp 0</td>
+            <td></td><td></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+    <div class="form-actions">
+      <span class="hint">Salin ringkasan tahun ini untuk diisikan ke Coretax.</span>
+      <button class="btn-ghost" id="copyBtn">Salin ringkasan untuk Coretax</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Data tersimpan di Google Sheet</h2>
+    <p class="hint" style="margin:0 0 14px;">Semua catatan dan aset tersimpan langsung di spreadsheet Google Sheets yang menjalankan backend ini. Untuk salinan Excel, buka spreadsheetnya lalu File &gt; Download &gt; Microsoft Excel.</p>
+    <div class="form-actions" style="margin-top:0;">
+      <span class="hint" id="dataStatus"></span>
+      <a class="btn-primary" id="openSheetBtn" href="#" target="_blank" rel="noopener" style="display:none;">Buka Spreadsheet</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Daftar aset usaha</h2>
+    <div class="form-grid">
+      <div class="field">
+        <label for="aNama">Nama aset</label>
+        <input id="aNama" placeholder="Contoh: Mesin pompa vakum">
+      </div>
+      <div class="field">
+        <label for="aTahun">Tahun perolehan</label>
+        <input id="aTahun" inputmode="numeric" placeholder="2026">
+      </div>
+      <div class="field">
+        <label for="aNilai">Nilai perolehan</label>
+        <div class="money-input"><span>Rp</span><input id="aNilai" inputmode="numeric" placeholder="0"></div>
+      </div>
+      <div class="field">
+        <label for="aKet">Keterangan (opsional)</label>
+        <input id="aKet" placeholder="Contoh: dibeli untuk servis toren besar">
+      </div>
+    </div>
+    <div class="form-actions">
+      <span class="hint">Aset dicatat untuk membantu isi Daftar Harta di SPT Tahunan.</span>
+      <button class="btn-primary" id="addAssetBtn">Tambah aset</button>
+    </div>
+    <div style="overflow-x:auto;margin-top:14px;">
+      <table>
+        <thead>
+          <tr><th style="text-align:left;">Nama aset</th><th>Tahun</th><th>Nilai perolehan</th><th style="text-align:left;">Keterangan</th><th class="row-actions">Aksi</th></tr>
+        </thead>
+        <tbody id="assetBody"></tbody>
+        <tfoot>
+          <tr class="tfoot"><td>Total nilai aset</td><td></td><td id="assetTotal">Rp 0</td><td></td><td></td></tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+// ====== KONFIGURASI — isi ini sebelum dipakai ======
+// Tempel URL Web App hasil Deploy dari Google Apps Script (Code.gs), diakhiri "/exec".
+const API_URL = "PASTE_URL_WEB_APP_APPS_SCRIPT_DI_SINI";
+// (Opsional) URL spreadsheet-nya sendiri, supaya ada tombol "Buka Spreadsheet".
+const SPREADSHEET_URL = "";
+// ====================================================
+
+const BULAN = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
+const EXEMPT_THRESHOLD = 500000000;
+const PPH_RATE = 0.005;
+
+let state = { businessName: "Buku Kas Bulanan Kurasin Toren", entries: [], assets: [] };
+let editingId = null;
+let pendingNewFiles = [];
+let existingBukti = [];
+
+function fmtRp(n){ n = Math.round(n||0); return "Rp " + n.toLocaleString("id-ID"); }
+function toNum(str){ const d=(str||"").toString().replace(/[^0-9]/g,""); return d?parseInt(d,10):0; }
+function showToast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg; t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"),2200);
+}
+
+async function callApi(action, payload){
+  const res = await fetch(API_URL, {
+    method: "POST",
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
+    body: JSON.stringify({ action, payload: payload || {} })
+  });
+  const data = await res.json();
+  if(data && data.error) throw new Error(data.error);
+  return data;
+}
+
+function fileToBase64(file){
+  return new Promise((resolve, reject)=>{
+    const reader = new FileReader();
+    reader.onload = ()=> resolve(reader.result.split(",")[1]);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+async function loadState(){
+  if(!API_URL || API_URL.indexOf("https://script.google.com/macros/s/AKfycbxJJgKlhpx2ovHaNk4iNyBWZPUKPRZoWlE83RziR3rfLOtEuJWHRvy4UUC1yFXEL0g1/exec") === 0){
+    document.getElementById("configWarning").style.display = "block";
+    return;
+  }
+  try{
+    state = await callApi("getState");
+  }catch(e){
+    showToast("Tidak bisa terhubung ke backend: " + e.message);
+    return;
+  }
+  document.getElementById("bizName").value = state.businessName;
+  buildYearOptions();
+  buildMonthOptions();
+  render();
+  renderAssets();
+  updateDataStatus();
+}
+
+function updateDataStatus(){
+  const years = Array.from(new Set(state.entries.map(e=>e.tahun))).sort((a,b)=>a-b);
+  document.getElementById("dataStatus").textContent = years.length ? "Tersimpan di Google Sheet: " + years.join(", ") : "Belum ada catatan tersimpan.";
+  if(SPREADSHEET_URL){
+    const btn = document.getElementById("openSheetBtn");
+    btn.href = SPREADSHEET_URL;
+    btn.style.display = "inline-block";
+  }
+}
+
+function currentYear(){
+  const sel = document.getElementById("yearSelect");
+  return sel && sel.value ? parseInt(sel.value,10) : new Date().getFullYear();
+}
+
+function buildYearOptions(){
+  const sel = document.getElementById("yearSelect");
+  const prevVal = sel.value;
+  const now = new Date().getFullYear();
+  const years = new Set([now]);
+  state.entries.forEach(e=>years.add(e.tahun));
+  const sorted = Array.from(years).sort((a,b)=>b-a);
+  sel.innerHTML = "";
+  sorted.forEach(y=>{
+    const opt = document.createElement("option");
+    opt.value = y; opt.textContent = y;
+    sel.appendChild(opt);
+  });
+  sel.value = prevVal && years.has(parseInt(prevVal,10)) ? prevVal : now;
+  sel.onchange = ()=>{ buildMonthOptions(); render(); };
+}
+
+function buildMonthOptions(){
+  const sel = document.getElementById("fBulan");
+  const prev = sel.value;
+  sel.innerHTML = "";
+  const year = currentYear();
+  BULAN.forEach((nm,i)=>{
+    const exists = state.entries.some(e=>e.tahun===year && e.bulan===i+1);
+    const opt = document.createElement("option");
+    opt.value = i+1;
+    opt.textContent = nm + (exists ? " — sudah tercatat" : "");
+    sel.appendChild(opt);
+  });
+  if(prev) sel.value = prev;
+}
+
+function entriesForYear(year){
+  return state.entries.filter(e=>e.tahun===year).sort((a,b)=>a.bulan-b.bulan);
+}
+
+function computePph(yearEntries){
+  let cum = 0;
+  return yearEntries.map(e=>{
+    const before = cum;
+    cum += e.omzet;
+    const exemptLeft = Math.max(0, EXEMPT_THRESHOLD - before);
+    const taxable = Math.max(0, e.omzet - exemptLeft);
+    return { ...e, pph: taxable * PPH_RATE };
+  });
+}
+
+function render(){
+  const year = currentYear();
+  document.getElementById("tableYearLabel").textContent = year;
+  const yearEntries = computePph(entriesForYear(year));
+
+  const tbody = document.getElementById("tbody");
+  tbody.innerHTML = "";
+  if(yearEntries.length===0){
+    tbody.innerHTML = '<tr class="empty-row"><td colspan="7">Belum ada catatan untuk '+year+'. Isi formulir di atas untuk bulan pertama.</td></tr>';
+  }
+  let tOmzet=0,tBiaya=0,tLaba=0,tPph=0;
+  yearEntries.forEach(e=>{
+    const biaya = e.marketing+e.komisi+e.lain;
+    const laba = e.omzet - biaya;
+    tOmzet+=e.omzet; tBiaya+=biaya; tLaba+=laba; tPph+=e.pph;
+    const bukti = e.bukti||[];
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td style="text-align:left;font-family:'Inter',sans-serif;">${BULAN[e.bulan-1]}</td>
+      <td>${fmtRp(e.omzet)}</td>
+      <td>${fmtRp(biaya)}</td>
+      <td>${fmtRp(laba)}</td>
+      <td>${fmtRp(e.pph)}</td>
+      <td style="text-align:center;font-family:'Inter',sans-serif;">${bukti.length ? '<button class="bukti-badge" data-toggle="'+e.id+'">'+bukti.length+' file</button>' : '<span style="color:var(--muted);">—</span>'}</td>
+      <td class="row-actions">
+        <button class="btn-ghost" data-edit="${e.id}">Edit</button>
+        <button class="btn-ghost" data-del="${e.id}">Hapus</button>
+      </td>`;
+    tbody.appendChild(tr);
+
+    if(bukti.length){
+      const detailTr = document.createElement("tr");
+      detailTr.className = "bukti-row hidden";
+      detailTr.id = "bukti-detail-"+e.id;
+      const links = bukti.map(b=>'<span class="bukti-chip"><a href="'+b.url+'" target="_blank">'+b.name+'</a></span>').join("");
+      detailTr.innerHTML = '<td colspan="7">'+links+'</td>';
+      tbody.appendChild(detailTr);
+    }
+  });
+  document.getElementById("fOmzetTot").textContent = fmtRp(tOmzet);
+  document.getElementById("fBiayaTot").textContent = fmtRp(tBiaya);
+  document.getElementById("fLabaTot").textContent = fmtRp(tLaba);
+  document.getElementById("fPphTot").textContent = fmtRp(tPph);
+  document.getElementById("sumOmzet").textContent = fmtRp(tOmzet);
+  document.getElementById("sumBiaya").textContent = fmtRp(tBiaya);
+  document.getElementById("sumLaba").textContent = fmtRp(tLaba);
+  document.getElementById("sumPph").textContent = fmtRp(tPph);
+
+  const count = yearEntries.length;
+  document.getElementById("tankCount").textContent = count + " / 12";
+  const waterEl = document.getElementById("tankWater");
+  const maxH = 108, maxY = 128;
+  const h = Math.round((count/12)*maxH);
+  waterEl.setAttribute("height", h);
+  waterEl.setAttribute("y", maxY - h);
+
+  tbody.querySelectorAll("[data-edit]").forEach(b=>b.onclick=()=>startEdit(b.getAttribute("data-edit")));
+  tbody.querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>deleteEntry(b.getAttribute("data-del")));
+  tbody.querySelectorAll("[data-toggle]").forEach(b=>b.onclick=()=>{
+    const row = document.getElementById("bukti-detail-"+b.getAttribute("data-toggle"));
+    if(row) row.classList.toggle("hidden");
+  });
+
+  buildMonthOptions();
+}
+
+function renderBuktiChips(){
+  const box = document.getElementById("buktiList");
+  box.innerHTML = "";
+  existingBukti.forEach(b=>{
+    const chip = document.createElement("span");
+    chip.className = "bukti-chip";
+    chip.innerHTML = '<a href="'+b.url+'" target="_blank">'+b.name+'</a>';
+    const rm = document.createElement("button");
+    rm.textContent = "×";
+    rm.onclick = async ()=>{
+      try{
+        const res = await callApi("deleteBukti", { entryId: editingId, buktiId: b.id });
+        existingBukti = res.bukti || [];
+        renderBuktiChips();
+        await loadState();
+        showToast("Bukti dihapus.");
+      }catch(err){ showToast(err.message); }
+    };
+    chip.appendChild(rm);
+    box.appendChild(chip);
+  });
+  pendingNewFiles.forEach((f,idx)=>{
+    const chip = document.createElement("span");
+    chip.className = "bukti-chip";
+    chip.textContent = f.name + " (belum diunggah) ";
+    const rm = document.createElement("button");
+    rm.textContent = "×";
+    rm.onclick = ()=>{ pendingNewFiles.splice(idx,1); renderBuktiChips(); };
+    chip.appendChild(rm);
+    box.appendChild(chip);
+  });
+}
+
+document.getElementById("fBukti").addEventListener("change", (ev)=>{
+  pendingNewFiles = pendingNewFiles.concat(Array.from(ev.target.files||[]));
+  renderBuktiChips();
+  ev.target.value = "";
+});
+
+function startEdit(id){
+  const e = state.entries.find(x=>x.id===id);
+  if(!e) return;
+  editingId = id;
+  document.getElementById("yearSelect").value = e.tahun;
+  document.getElementById("fBulan").value = e.bulan;
+  document.getElementById("fOmzet").value = e.omzet;
+  document.getElementById("fMarketing").value = e.marketing;
+  document.getElementById("fKomisi").value = e.komisi;
+  document.getElementById("fLain").value = e.lain;
+  document.getElementById("fCatatan").value = e.catatan||"";
+  existingBukti = (e.bukti||[]).map(b=>({...b}));
+  pendingNewFiles = [];
+  renderBuktiChips();
+  document.getElementById("formTitle").textContent = "Edit " + BULAN[e.bulan-1] + " " + e.tahun;
+  document.getElementById("formHint").textContent = "Kamu sedang mengedit catatan yang sudah tersimpan.";
+  document.getElementById("cancelEdit").style.display = "inline-block";
+  document.getElementById("saveBtn").textContent = "Simpan perubahan";
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function resetForm(){
+  editingId = null;
+  ["fOmzet","fMarketing","fKomisi","fLain","fCatatan"].forEach(id=>document.getElementById(id).value="");
+  existingBukti = [];
+  pendingNewFiles = [];
+  renderBuktiChips();
+  document.getElementById("formTitle").textContent = "Catat bulan ini";
+  document.getElementById("formHint").textContent = "Pilih bulan yang sudah tercatat untuk mengeditnya.";
+  document.getElementById("cancelEdit").style.display = "none";
+  document.getElementById("saveBtn").textContent = "Simpan bulan ini";
+}
+
+async function deleteEntry(id){
+  try{
+    await callApi("deleteEntry", { id });
+    await loadState();
+    showToast("Catatan dihapus.");
+  }catch(err){ showToast(err.message); }
+}
+
+async function saveEntry(){
+  const year = currentYear();
+  const bulan = parseInt(document.getElementById("fBulan").value,10);
+  const payload = {
+    id: editingId || undefined,
+    tahun: year, bulan,
+    omzet: toNum(document.getElementById("fOmzet").value),
+    marketing: toNum(document.getElementById("fMarketing").value),
+    komisi: toNum(document.getElementById("fKomisi").value),
+    lain: toNum(document.getElementById("fLain").value),
+    catatan: document.getElementById("fCatatan").value.trim()
+  };
+  try{
+    const entry = await callApi("upsertEntry", payload);
+    if(pendingNewFiles.length){
+      const files = await Promise.all(pendingNewFiles.map(async f=>({
+        name: f.name, mimeType: f.type || "application/octet-stream", dataBase64: await fileToBase64(f)
+      })));
+      await callApi("uploadBukti", { entryId: entry.id, files });
+    }
+    await loadState();
+    document.getElementById("yearSelect").value = year;
+    resetForm();
+    render();
+    showToast("Tersimpan untuk " + BULAN[bulan-1] + " " + year + ".");
+  }catch(err){ showToast(err.message); }
+}
+
+function renderAssets(){
+  const tbody = document.getElementById("assetBody");
+  tbody.innerHTML = "";
+  if(!state.assets.length){
+    tbody.innerHTML = '<tr class="empty-row"><td colspan="5">Belum ada aset tercatat.</td></tr>';
+  }
+  let total = 0;
+  state.assets.forEach(a=>{
+    total += a.nilai;
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td style="text-align:left;font-family:'Inter',sans-serif;">${a.nama}</td>
+      <td>${a.tahun}</td>
+      <td>${fmtRp(a.nilai)}</td>
+      <td style="text-align:left;font-family:'Inter',sans-serif;">${a.keterangan||"—"}</td>
+      <td class="row-actions"><button class="btn-ghost" data-adel="${a.id}">Hapus</button></td>`;
+    tbody.appendChild(tr);
+  });
+  document.getElementById("assetTotal").textContent = fmtRp(total);
+  tbody.querySelectorAll("[data-adel]").forEach(b=>b.onclick=async ()=>{
+    try{
+      await callApi("deleteAsset", { id: b.getAttribute("data-adel") });
+      await loadState();
+      showToast("Aset dihapus.");
+    }catch(err){ showToast(err.message); }
+  });
+}
+
+async function addAsset(){
+  const nama = document.getElementById("aNama").value.trim();
+  if(!nama){ showToast("Isi nama aset dulu."); return; }
+  const payload = {
+    nama,
+    tahun: toNum(document.getElementById("aTahun").value),
+    nilai: toNum(document.getElementById("aNilai").value),
+    keterangan: document.getElementById("aKet").value.trim()
+  };
+  try{
+    await callApi("upsertAsset", payload);
+    ["aNama","aTahun","aNilai","aKet"].forEach(id=>document.getElementById(id).value="");
+    await loadState();
+    showToast("Aset ditambahkan.");
+  }catch(err){ showToast(err.message); }
+}
+
+async function copySummary(){
+  const year = currentYear();
+  const yearEntries = computePph(entriesForYear(year));
+  let lines = [(state.businessName||"Usaha") + " — Ringkasan " + year + " untuk Coretax", ""];
+  let tOmzet=0,tBiaya=0,tLaba=0,tPph=0;
+  yearEntries.forEach(e=>{
+    const biaya = e.marketing+e.komisi+e.lain;
+    const laba = e.omzet-biaya;
+    tOmzet+=e.omzet; tBiaya+=biaya; tLaba+=laba; tPph+=e.pph;
+    lines.push(BULAN[e.bulan-1]+": omset "+fmtRp(e.omzet)+", biaya "+fmtRp(biaya)+", laba "+fmtRp(laba)+", PPh final "+fmtRp(e.pph));
+  });
+  lines.push("", "Total omset: "+fmtRp(tOmzet), "Total biaya: "+fmtRp(tBiaya), "Total laba bersih: "+fmtRp(tLaba), "Total PPh Final terutang: "+fmtRp(tPph));
+  try{
+    await navigator.clipboard.writeText(lines.join("\n"));
+    showToast("Ringkasan disalin ke clipboard.");
+  }catch(e){ showToast("Tidak bisa menyalin otomatis — pilih teks secara manual."); }
+}
+
+document.getElementById("saveBtn").addEventListener("click", saveEntry);
+document.getElementById("cancelEdit").addEventListener("click", resetForm);
+document.getElementById("copyBtn").addEventListener("click", copySummary);
+document.getElementById("addAssetBtn").addEventListener("click", addAsset);
+document.getElementById("bizName").addEventListener("change", async (e)=>{
+  try{
+    const res = await callApi("setBusinessName", { name: e.target.value });
+    state.businessName = res.businessName;
+  }catch(err){ showToast(err.message); }
+});
+
+loadState();
+</script>
+</body>
+</html>
